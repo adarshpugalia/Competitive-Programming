@@ -61,25 +61,25 @@ class LongestPalindromicSubsequence {
 		}
 
 		int get_lps(int start, int end, string a) {
-		if(end<start)
-			return 0;
+			if(end<start)
+				return 0;
 
-		if(end==start)
-			return 1;
+			if(end==start)
+				return 1;
 
-		if(lps[start][end]!=-1)
-			return lps[start][end];
+			if(lps[start][end]!=-1)
+				return lps[start][end];
 
-		int ret = 0;
-		if(a[start]==a[end])
-			ret = 2 + get_lps(start+1, end-1, a);
+			int ret = 0;
+			if(a[start]==a[end])
+				ret = 2 + get_lps(start+1, end-1, a);
 
-		ret = max(ret, get_lps(start+1, end, a));
-		ret = max(ret, get_lps(start, end-1, a));
+			ret = max(ret, get_lps(start+1, end, a));
+			ret = max(ret, get_lps(start, end-1, a));
 
-		lps[start][end] = ret;
-		return ret;
-	}
+			lps[start][end] = ret;
+			return ret;
+		}
 };
 
 int main() {
