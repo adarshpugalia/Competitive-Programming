@@ -38,6 +38,7 @@
 /* constraints. */ 
 #define max_size 102
 #define max_sieve_size 1000005
+#define max_matrix_size 100
 #define max_log 17
 #define INF 1000000000000000000
 #define MOD 1000000007
@@ -57,12 +58,12 @@ using namespace std;
  * pow			: exponentiates the matrix.
  *
  * NOTE: The matrix does not perform modular arithmetic. For mod, use the 
- * Long class, and change the type of mat[][] to Long.
+ * Long class, and change #define ll to Long.
  */
 class Matrix {
 	public:
 		int rows, cols;
-		ll mat[max_size][max_size];
+		ll mat[max_matrix_size][max_matrix_size];
 
 		/* This is the default constructor. */
 		Matrix() {}
@@ -89,7 +90,7 @@ class Matrix {
 		 */
 		Matrix operator *(const Matrix& a) {
 			Matrix temp(rows, cols);
-			rep(i,0,rows) rep(j,0,a.cols) rep(k,0,cols) temp.mat[i][j] = temp.mat[i][j] + mat[i][k]*a.mat[k][j];
+			rep(i,0,rows) rep(j,0,a.cols) rep(k,0,cols) temp[i][j] = temp[i][j] + mat[i][k]*a.mat[k][j];
 			return temp;
 		}
 
@@ -100,6 +101,10 @@ class Matrix {
 			while(p) { if(p&1) res = res*(*this); *this = (*this)*(*this); p /= 2; }
 			*this = res;
 		}
+
+		
+		/* This overloads the subscript operator for easier access. */
+		ll* operator[](int index) { return mat[index]; }
 };
 
 int main() {
