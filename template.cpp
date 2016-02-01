@@ -32,14 +32,14 @@
 #define slf(n) scanf("%lf", &n) 
 #define pd(n) printf("%d", n);
 #define pl(n) printf("%lld", n);
-#define plf(n) printf("%0.9lf\n", n);
+#define plf(n) printf("%0.9lf", n);
 #define ps printf(" ")
 #define pe printf("\n")
 
 /* loops */
 #define rep(i,j,k) for(int i=j; i<=k; i++)
 #define repd(i,j,k) for(int i=j; i>=k; i--)
-#define iter(it, s) for(auto it=s.begin(), it!=s.end(); it++)
+#define iter(it, s) for(auto it=s.begin(); it!=s.end(); it++)
 
 /* constraints. */ 
 #define max_size 100005
@@ -65,7 +65,7 @@ void solve(int test_case) {
 int main() {
 	preprocess();
 	int t = 1;
-	sd(t);
+	//sd(t);
  
 	rep(i,1,t) {
 		solve(i);
