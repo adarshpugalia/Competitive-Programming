@@ -1,9 +1,3 @@
-/*****************************************************************************************/
-/*																		     			 */
-/*  					Adarsh Pugalia 										 			 */
-/*																			 			 */
-/*****************************************************************************************/
- 
 #include <bits/stdc++.h>
 
 /* Data types and structures. */
@@ -58,23 +52,23 @@ bool double_compare(double a, double b) { return (a+EPS>b && a-EPS<b); }
  
 using namespace std;
 
-void preprocess() {
-}
+class Point {
+	public:
+		double x, y, z;
 
-void init() {
-}
+		Point(double a = 0, double b = 0, double c = 0) { x = a, y = b, z = c; }
+		double get_distance(Point pt) { return pow((x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z), 0.5); }
 
-void solve(int test_case) {
-	init();
-}
+		/* operator overloading. */
+		bool operator==(const Point& i) { return double_compare(x, i.x) && double_compare(y, i.y) && double_compare(z, i.z); }
+
+		/* input and output functions. */
+		friend ostream &operator<<(ostream &output, const Point &pt) { output<<pt.x<<" "<<pt.y; return output; }
+		friend istream &operator>>(istream &input, Point &pt) { input>>pt.x>>pt.y; return input; }
+		void input() { cin>>x>>y>>z; }
+		void output() { plf(x); ps; plf(y); ps; plf(z); pe; }
+};
 
 int main() {
-	preprocess();
-	int t = 1;
-	//sd(t);
- 
-	rep(i,1,t) {
-		solve(i);
-	}
 	return 0;
 }
