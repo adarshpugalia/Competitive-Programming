@@ -58,6 +58,15 @@ class Point {
 
 		Point(double a = 0, double b = 0, double c = 0) { x = a, y = b, z = c; }
 		double get_distance(Point pt) { return pow((x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z), 0.5); }
+		ll get_squared_distance(Point pt) { return (x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z); }
+
+		/* 
+		 * This method computes the turn for three points in order.
+		 * returns +ve for anticlockwise order, 0 if the points are collinear, -ve for clockwise.
+		 *
+		 * NOTE: This is also twice the signed area of the traingle formed by the three points.
+		 */
+		double calculate_turn(Point i, Point j) { return (i.x-x)*(j.y-y) - (i.y-y)*(j.x-x); }
 
 		/* operator overloading. */
 		bool operator==(const Point& i) { return double_compare(x, i.x) && double_compare(y, i.y) && double_compare(z, i.z); }
