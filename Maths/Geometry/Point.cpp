@@ -42,14 +42,22 @@
 #define max_log 17
 #define INF 1000000000000000000
 #define MOD 1000000007
-#define EPS 0.0000000000001
+#define EPS 0.0001
+#define GCD_EPS 0.0001
+#define PI 3.14159265358979323846
 #define mod(a) ((a)%MOD)
 
 #define bcnt __builtin_popcount 
 
 ll ciel(double a) { ll ret = a; if(a-ret>EPS) ret++; return ret; }
-bool double_compare(double a, double b) { return (a+EPS>b && a-EPS<b); }
- 
+ll gcd(ll a, ll b) { if(a<b)return gcd(b, a); if(a%b==0)return b; return gcd(b, a%b); }
+ll pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){if(p&1) res = mod(res*n);n = mod(n*n);p /= 2;} return res;}
+
+double fgcd(double a, double b) { if(fabs(a)<fabs(b)) return fgcd(b, a); if(fabs(b)<GCD_EPS) return a; return fgcd(b, fmod(a,b)); }
+
+bool db_db_cmp(double a, double b) { return (a+EPS>b && a-EPS<b); }
+bool db_ll_cmp(double a, ll b) { bool ret = (a+EPS>b && a-EPS<b); if(ret) return ret; b++; return (a+EPS>b && a-EPS<b); }
+
 using namespace std;
 
 class Point {
@@ -68,8 +76,19 @@ class Point {
 		 */
 		double calculate_turn(Point i, Point j) { return (i.x-x)*(j.y-y) - (i.y-y)*(j.x-x); }
 
+		/*
+		 * This method returns the angle between three points.
+		 * The current point is the centre, and the other two points its arms.
+		 * 
+		 * @return double: angle in radians.
+		 */
+		double get_angle(Point i, Point j) { 
+			double b = get_distance(i), c = get_distance(j), a = i.get_distance(j); 
+			return acos((b*b + c*c - a*a)/(2*b*c));
+		}
+
 		/* operator overloading. */
-		bool operator==(const Point& i) { return double_compare(x, i.x) && double_compare(y, i.y) && double_compare(z, i.z); }
+		bool operator==(const Point& i) { return db_db_cmp(x, i.x) && db_db_cmp(y, i.y) && db_db_cmp(z, i.z); }
 
 		/* input and output functions. */
 		friend ostream &operator<<(ostream &output, const Point &pt) { output<<pt.x<<" "<<pt.y; return output; }
