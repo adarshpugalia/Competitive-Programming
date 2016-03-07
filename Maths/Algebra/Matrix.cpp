@@ -57,13 +57,12 @@ using namespace std;
  * a*b 			: multiplies two matrices (assuming they can be multiplied).
  * pow			: exponentiates the matrix.
  *
- * NOTE: The matrix does not perform modular arithmetic. For mod, use the 
- * Long class, and change #define ll to Long.
+ * NOTE: The matrix performs modular arithmetic.
  */
 class Matrix {
 	public:
 		int rows, cols;
-		ll mat[max_matrix_size][max_matrix_size];
+		ll mat[max_size][max_size];
 
 		/* This is the default constructor. */
 		Matrix() {}
@@ -80,7 +79,7 @@ class Matrix {
 
 
 		/* This sets the matrix to be identity matrix. */
-		void get_identity() { rep(i,0,rows) { rep(j,0,cols) { if(i==j) { mat[i][j] = 1; } else { mat[i][j] = 0;} } } }
+		void set_identity() { rep(i,0,rows) { rep(j,0,cols) { if(i==j) { mat[i][j] = 1; } else { mat[i][j] = 0;} } } }
 
 
 		/* 
@@ -90,22 +89,22 @@ class Matrix {
 		 */
 		Matrix operator *(const Matrix& a) {
 			Matrix temp(rows, cols);
-			rep(i,0,rows) rep(j,0,a.cols) rep(k,0,cols) temp[i][j] = temp[i][j] + mat[i][k]*a.mat[k][j];
+			rep(i,0,rows) rep(j,0,a.cols) rep(k,0,cols) temp[i][j] = mod(temp[i][j] + mod(mat[i][k]*a.mat[k][j]));
 			return temp;
 		}
 
 
 		/* This method exponentiates the matrix. */
-		void pow(ll p) { 
-			Matrix res(rows,cols); res.get_identity();
+		Matrix pow(ll p) { 
+			Matrix res(rows,cols); res.set_identity();
 			while(p) { if(p&1) res = res*(*this); *this = (*this)*(*this); p /= 2; }
-			*this = res;
+			return res;
 		}
 
 		
 		/* This overloads the subscript operator for easier access. */
 		ll* operator[](int index) { return mat[index]; }
-};
+}mat;
 
 int main() {
 	return 0;
