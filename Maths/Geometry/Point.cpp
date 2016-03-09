@@ -87,8 +87,12 @@ class Point {
 			return acos((b*b + c*c - a*a)/(2*b*c));
 		}
 
+		/* This method return the dot product between two points taken as vector from the origin. */
+		double dot(Point i) { return x*i.x + y*i.y + z*i.z; }
+
 		/* operator overloading. */
 		bool operator==(const Point& i) { return db_db_cmp(x, i.x) && db_db_cmp(y, i.y) && db_db_cmp(z, i.z); }
+		Point operator -(const Point &i) { Point ret(x, y, z); ret.x -= i.x, ret.y -= i.y, ret.z -= i.z; return ret; }
 
 		/* input and output functions. */
 		friend ostream &operator<<(ostream &output, const Point &pt) { output<<pt.x<<" "<<pt.y; return output; }
