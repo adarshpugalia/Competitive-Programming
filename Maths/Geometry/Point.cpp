@@ -87,6 +87,21 @@ class Point {
 			return acos((b*b + c*c - a*a)/(2*b*c));
 		}
 
+		/*
+		 * This method rotates a point around the current point by the given angle.
+		 *
+		 * NOTE: 1. Angle should be in radians.
+		 		 2. Rotation is counter-clockwise..
+		 */
+		Point rotate(Point i, double angle) {
+			Point ret;
+			double s = sin(angle), c = cos(angle);
+			
+			i.x -= x, i.y -= y;
+			ret.x = i.x*c - i.y*s; ret.y = i.x*s + i.y*c; ret.x += x, ret.y += y;
+			return ret;
+		}
+
 		/* This method return the dot product between two points taken as vector from the origin. */
 		double dot(Point i) { return x*i.x + y*i.y + z*i.z; }
 
