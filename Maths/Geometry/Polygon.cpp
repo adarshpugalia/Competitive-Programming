@@ -83,8 +83,8 @@ class Point {
 		 * @return double: angle in radians.
 		 */
 		double get_angle(Point i, Point j) { 
-			double b = get_distance(i), c = get_distance(j);
-			return acos((1.0*get_squared_distance(i) + get_squared_distance(j) - i.get_squared_distance(j))/(2*b*c));
+			double b = get_distance(i), c = get_distance(j), a = i.get_distance(j); 
+			return acos((b*b + c*c - a*a)/(2*b*c));
 		}
 
 		/*
@@ -114,7 +114,36 @@ class Point {
 		friend istream &operator>>(istream &input, Point &pt) { input>>pt.x>>pt.y; return input; }
 		void input() { cin>>x>>y>>z; }
 		void output() { plf(x); ps; plf(y); ps; plf(z); pe; }
-}origin;
+};
+
+
+/*
+ * This class represents an object polygon.
+ *
+ * @data vector<Point> pts: this stores the points of the polygon in order.
+ */
+class Polygon {
+	public:
+		vector<Point> pts;
+
+		void clear() { pts.clear(); }
+		void add(Point p) { pts.pb(p); }
+
+		/* This method checks if the polygon is a rectangle. */
+		bool is_rectangle() { 
+			if(pts.size()!=4) return false;
+			for(int i=0; i<4; i++) { if(!db_ll_cmp((pts[(i+1)%4]-pts[i]).dot(pts[(i+2)%4]-pts[(i+1)%4]), 0)) return false; }
+			return true;
+		}
+
+		/* This method checks if the polygon is a square. */
+		bool is_square() {
+			if(!is_rectangle()) return false;
+			double dis = pts[1].get_distance(pts[0]);
+			for(int i=0; i<4; i++) if(!db_db_cmp(dis, pts[(i+1)%4].get_distance(pts[i]))) return false;
+			return true;
+		}
+};
 
 int main() {
 	return 0;
