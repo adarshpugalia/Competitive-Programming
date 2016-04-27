@@ -56,7 +56,6 @@ ll pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){if(p&
 double fgcd(double a, double b) { if(fabs(a)<fabs(b)) return fgcd(b, a); if(fabs(b)<GCD_EPS) return a; return fgcd(b, fmod(a,b)); }
 
 bool db_db_cmp(double a, double b) { return (a+EPS>b && a-EPS<b); }
-bool db_ll_cmp(double a, ll b) { bool ret = (a+EPS>b && a-EPS<b); if(ret) return ret; b++; return (a+EPS>b && a-EPS<b); }
 
 using namespace std;
 
@@ -69,7 +68,7 @@ class Point {
 		ll get_squared_distance(Point pt) { return (x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z); }
 
 		/* 
-		 * This method computes the turn for three points in order.
+		 * This method computes the turn for three points (itself, i and j) in order.
 		 * returns +ve for anticlockwise order, 0 if the points are collinear, -ve for clockwise.
 		 *
 		 * NOTE: This is also twice the signed area of the traingle formed by the three points.
@@ -117,6 +116,15 @@ class Point {
 };
 
 
+/* Comparator for sorting the points of polygon. */
+Point lowest_point;
+bool points_comp(Point i, Point j) {
+	double turn = lowest_point.calculate_turn(i, j);
+	if(db_db_cmp(turn, 0)) return lowest_point.get_squared_distance(i)<lowest_point.get_squared_distance(j);
+	return turn>0.0;
+}
+
+
 /*
  * This class represents an object polygon.
  *
@@ -129,10 +137,18 @@ class Polygon {
 		void clear() { pts.clear(); }
 		void add(Point p) { pts.pb(p); }
 
+		/* This method sorts the points in anticlockwise manner. */
+		void sort_points() { 
+			lowest_point = pts[0];
+			rep(i,1,sz(pts)) {
+				if(pts[i].y<lowest_point.y || (db_db_cmp(lowest_point.y, pts[i].y) && pts[i].x<lowest_point.x)) lowest_point = pts[i];}
+			sort(all(pts), points_comp); 
+		}
+
 		/* This method checks if the polygon is a rectangle. */
 		bool is_rectangle() { 
 			if(pts.size()!=4) return false;
-			for(int i=0; i<4; i++) { if(!db_ll_cmp((pts[(i+1)%4]-pts[i]).dot(pts[(i+2)%4]-pts[(i+1)%4]), 0)) return false; }
+			for(int i=0; i<4; i++) { if(!db_db_cmp((pts[(i+1)%4]-pts[i]).dot(pts[(i+2)%4]-pts[(i+1)%4]), 0)) return false; }
 			return true;
 		}
 
@@ -143,6 +159,10 @@ class Polygon {
 			for(int i=0; i<4; i++) if(!db_db_cmp(dis, pts[(i+1)%4].get_distance(pts[i]))) return false;
 			return true;
 		}
+
+		/* input and output functions. */
+		friend ostream &operator<<(ostream &output, const Polygon &p) { rep(i,0,sz(p.pts)) {cout<<p.pts[i]<<" ";} return output; }
+
 };
 
 int main() {

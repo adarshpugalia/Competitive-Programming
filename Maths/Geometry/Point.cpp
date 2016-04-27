@@ -56,7 +56,6 @@ ll pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){if(p&
 double fgcd(double a, double b) { if(fabs(a)<fabs(b)) return fgcd(b, a); if(fabs(b)<GCD_EPS) return a; return fgcd(b, fmod(a,b)); }
 
 bool db_db_cmp(double a, double b) { return (a+EPS>b && a-EPS<b); }
-bool db_ll_cmp(double a, ll b) { bool ret = (a+EPS>b && a-EPS<b); if(ret) return ret; b++; return (a+EPS>b && a-EPS<b); }
 
 using namespace std;
 
