@@ -42,7 +42,7 @@
 #define max_log 17
 #define INF 1000000000000000000
 #define MOD 1000000007
-#define EPS 0.0001
+#define EPS 0.00000000001
 #define GCD_EPS 0.0001
 #define PI 3.14159265358979323846
 #define mod(a) ((a)%MOD)
@@ -74,6 +74,11 @@ class Point {
 		 * NOTE: This is also twice the signed area of the traingle formed by the three points.
 		 */
 		double calculate_turn(Point i, Point j) { return (i.x-x)*(j.y-y) - (i.y-y)*(j.x-x); }
+
+
+		/* This method returns the signed area of the three points in order. */
+		double get_area(Point i, Point j) { return calculate_turn(i, j)/2; }
+
 
 		/*
 		 * This method returns the angle between three points.
@@ -116,5 +121,6 @@ class Point {
 }origin;
 
 int main() {
-	return 0;
+
+	return 0;	
 }
