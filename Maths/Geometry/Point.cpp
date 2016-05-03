@@ -67,6 +67,13 @@ class Point {
 		double get_distance(Point pt) { return pow((x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z), 0.5); }
 		ll get_squared_distance(Point pt) { return (x-pt.x)*(x-pt.x) + (y-pt.y)*(y-pt.y) + (z-pt.z)*(z-pt.z); }
 
+		/* This method returns the quadrant the point is in. */
+		int get_quadrant() { return (x<0)?((y<0)?3:2):((y<0)?4:1); }
+
+		/* This method converts radians to degrees. */
+		double get_radian_to_degrees(double radians) { return radians*180/PI; }
+
+
 		/* 
 		 * This method computes the turn for three points in order.
 		 * returns +ve for anticlockwise order, 0 if the points are collinear, -ve for clockwise.
@@ -109,6 +116,18 @@ class Point {
 		/* This method return the dot product between two points taken as vector from the origin. */
 		double dot(Point i) { return x*i.x + y*i.y + z*i.z; }
 
+		/* 
+		 * comparator method for the points. 
+		 * Sorts points according to their angle with +x-axis.
+		 * In case of tie, points closer to origin are sorted first.
+		 */
+		bool operator<(const Point &p) const { 
+			double f = Point(*this).get_radian_to_degrees(atan2(y, x)); if(f<0) f+= 360;
+			double s = Point(p).get_radian_to_degrees(atan2(y,x)); if(s<0) s+= 360;
+			if(db_db_cmp(f, s)) { return Point(*this).get_squared_distance(Point(0,0))<Point(p).get_distance(Point(0, 0)); }
+			return f<s;	
+		}
+
 		/* operator overloading. */
 		bool operator==(const Point& i) { return db_db_cmp(x, i.x) && db_db_cmp(y, i.y) && db_db_cmp(z, i.z); }
 		Point operator -(const Point &i) { Point ret(x, y, z); ret.x -= i.x, ret.y -= i.y, ret.z -= i.z; return ret; }
@@ -121,6 +140,5 @@ class Point {
 }origin;
 
 int main() {
-
 	return 0;	
 }
