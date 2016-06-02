@@ -52,16 +52,19 @@
 #define GCD_EPS 0.0001
 #define PI 3.14159265358979323846
 #define mod(a) ((a)%MOD)
-
 #define bcnt __builtin_popcount 
 
 ll ciel(double a) { ll ret = a; if(a-ret>EPS) ret++; return ret; }
 ll gcd(ll a, ll b) { if(a<b)return gcd(b, a); if(a%b==0)return b; return gcd(b, a%b); }
+
+/* This method does modular exponentiation in log(n). */
 ll pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){if(p&1) res = mod(res*n);n = mod(n*n);p /= 2;} return res;}
 
 double fgcd(double a, double b) { if(fabs(a)<fabs(b)) return fgcd(b, a); if(fabs(b)<GCD_EPS) return a; return fgcd(b, fmod(a,b)); }
 
+/* This method compares whether two doubles are (almost) equal. */
 bool db_db_cmp(double a, double b) { return (a+EPS>b && a-EPS<b); }
+
  
 using namespace std;
 
