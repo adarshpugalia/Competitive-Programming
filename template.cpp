@@ -74,7 +74,7 @@ ll mod_pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){i
 ll get_inverse(ll n) { return mod_pow(n, MOD-2);}
 
 /* This method return nCr modulo MOD. */
-ll get_nCr(ll n, ll r) { return mod(ret*get_inverse(mod(fact[r]*fact[n-r]))); }
+ll get_nCr(ll n, ll r) { return mod(fact[n]*get_inverse(mod(fact[r]*fact[n-r]))); }
 
 /* End of maths functions. */
 
@@ -88,11 +88,14 @@ void print_ll(ll n){if(n<0){n=-n; putchar_unlocked('-');}int i=21; char output_b
 
 using namespace std;
 
+
 void preprocess() {
 }
 
+
 void init() {
 }
+
 
 void solve(int test_case) {
 	init();
