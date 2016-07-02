@@ -128,7 +128,7 @@ class Grid {
 		 * @param cell: the cell to move to.
 		 */
 		bool is_valid_to_move(pii cell) {
-			if(grid[cell.f][cell.s]=='.' && vis[cell.f][cell.s]==0)
+			if(is_inside(next_cell) && grid[cell.f][cell.s]=='.' && vis[cell.f][cell.s]==0)
 				return true;
 
 			return false;
@@ -154,22 +154,22 @@ class Grid {
 			vis[cur.f][cur.s] = 1;
 
 			pii next_cell = get_next_cell(cur, LEFT);
-			if(is_inside(next_cell) && is_valid_to_move(next_cell)) {
+			if(is_valid_to_move(next_cell)) {
 				dfs(next_cell, cur);
 			}
 
 			next_cell = get_next_cell(cur, RIGHT);
-			if(is_inside(next_cell) && is_valid_to_move(next_cell)) {
+			if(is_valid_to_move(next_cell)) {
 				dfs(next_cell, cur);
 			}
 
 			next_cell = get_next_cell(cur, UP);
-			if(is_inside(next_cell) && is_valid_to_move(next_cell)) {
+			if(is_valid_to_move(next_cell)) {
 				dfs(next_cell, cur);
 			}
 
 			next_cell = get_next_cell(cur, DOWN);
-			if(is_inside(next_cell) && is_valid_to_move(next_cell)) {
+			if(is_valid_to_move(next_cell)) {
 				dfs(next_cell, cur);
 			}
 		}
