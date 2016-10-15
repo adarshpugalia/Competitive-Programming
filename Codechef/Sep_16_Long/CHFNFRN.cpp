@@ -1,3 +1,8 @@
+/*
+ * Author: Adarsh Pugalia
+ * Problem Link: https://www.codechef.com/problems/CHFNFRN
+ */
+ 
 #include <bits/stdc++.h>
 
 /* Data types and structures. */
@@ -49,7 +54,7 @@
 
 using namespace std;
 
-#define max_node_size 1000005
+#define max_node_size 100005
 #define Edge pair<int, ll>
 
 /*
@@ -63,24 +68,21 @@ using namespace std;
  */
 class Node {
 	public:
-		int index;
-		int parent;
+		int colour;
 		vector<Edge > edges;
 
 
 		/* constructor. */
 		Node() {
-			parent = -1;
+			colour = -1;
 		}
 
-
-		inline int get_parent() {
-			return parent;
+		inline int get_colour() {
+			return colour;
 		}
- 
 
-		inline void set_parent(int p) {
-			parent = p;
+		inline void set_colour(int c) {
+			colour = c;
 		}
 };
 
@@ -100,19 +102,18 @@ class Graph {
 	public:
 		int node_size;
 		ll edge_size;
-		bool is_undirected, visited[max_node_size];
+		bool is_undirected;
 		Node nodes[max_node_size];
 
 
-		/* constructor. */
-		Graph() { rep(i,0,max_node_size-1) { nodes[i].index = i; visited[i] = 0; } is_undirected = true; }
+		/* constructors. */
+		Graph() { is_undirected = true; }
+		Graph(int n) { node_size = n; is_undirected = true; }
+		Graph(int n, ll m) { node_size = n; edge_size = m; is_undirected = true; }
 
 
 		/* This method sets the graph as directed. */
 		void set_directed() { is_undirected = false; }
-
-
-		void clear_visited() { rep(i,1,node_size) visited[i] = 0; }
 
 
 		/*
@@ -142,20 +143,6 @@ class Graph {
 		}
 
 
-		/* This method performs dfs on the graph. */
-		void dfs(int current) {
-			visited[current] = 1;
-
-			rep(i,0,size(nodes[current].edges)) {
-				int to = nodes[current].edges[i].f;
-				if(!visited[to]) {
-					nodes[to].parent = current;
-					dfs(to);
-				}
-			}
-		}
-
-
 		/* This method converts the graph into its complement graph. */
 		void complement_graph() {
 			rep(i,1,node_size) {
@@ -167,6 +154,32 @@ class Graph {
 		}
 
 
+		/* This method performs dfs on the graph. */
+		bool dfs(int current, int colour) {
+			bool ret = true;
+			nodes[current].set_colour(colour);
+
+			rep(i,0,sz(nodes[current].edges)) {
+				int to = nodes[current].edges[i].f;
+				if(nodes[to].get_colour()!=-1) {
+					if(nodes[to].get_colour() == colour) return false;
+				} else {
+					ret = ret & dfs(to, colour^1);
+				}
+			}
+
+			return ret;
+		}
+
+
+		/* This method checks if the given graph is bipartite.*/
+		bool is_bipartite() {
+			bool ret = true;
+			rep(i,1,node_size) { if(nodes[i].get_colour() == -1) ret = ret & dfs(i, 0); }
+			return ret;
+		}
+
+
 		/* overloading output operator. */
 		friend ostream &operator<<(ostream &output, const Graph &g) { 
 			output<<"Node Size: " << g.node_size << " Edge Size: " << g.edge_size<<endl; 
@@ -175,4 +188,31 @@ class Graph {
 					output << "From: " << i << " To: " << g.nodes[i].edges[j].f << " Cost: " << g.nodes[i].edges[j].s << endl;
 			return output; 
 		}
-}  
+} g;
+
+void solve() {
+	int n, m;
+	cin>>n>>m;
+
+	g = Graph(n, m);
+	rep(i,1,m) {
+		int a, b;
+		cin>>a>>b;
+		g.add_edge(a, b);
+	}
+
+	g.complement_graph();
+	cout<<(g.is_bipartite()?"YES":"NO")<<endl;
+}
+
+
+int main() {
+	int t;
+	cin>>t;
+	
+	while(t--) {
+		solve();
+	}
+
+	return 0;
+}
