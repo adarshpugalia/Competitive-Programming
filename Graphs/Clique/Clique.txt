@@ -1,0 +1,25 @@
+INTRODUCTION
+-------------------------------------------------------------------------------
+1. A clique is a subset of vertices in an undirected graph such that any two
+pair of nodes in the subset have am edge connecting them.
+
+2. A maximal clique of a graph is a clique such that no other clique with
+greater number of vertices exist.
+
+3. Clique number is the number of vertices in the clique.
+
+4. The intersection number of a graph is the minimum number of cliques that
+cover all edges of the graph.
+
+5. The opposite of clique is independent set, i.e. the set of vertices such that
+no two vertices has an edge between them.
+
+
+PROPERTIES
+-------------------------------------------------------------------------------
+
+
+PROBLEMS
+-------------------------------------------------------------------------------
+1. For a given graph to be divided into two sets, such that both the sets are
+cliques in itself, the complement graph should be bipartite.
