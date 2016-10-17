@@ -1,5 +1,14 @@
-#include <bits/stdc++.h>
+/*
+ * Author: Adarsh Pugalia
+ * Problem: https://www.codechef.com/problems/DIVMAC
+ * Solution: Sieve + Segment Tree
+ *
+ * For calculating the Lowest factor, just store the lowerst factor in sieve.
+ * For the next lowerst factor for x, sieve[x/sieve[x]]
+ */
 
+#include <bits/stdc++.h>
+ 
 /* Data types and structures. */
 #define ll long long int
 #define llu long long int unsigned
@@ -29,12 +38,12 @@
 #define plf(n) printf("%0.9lf", n);
 #define ps printf(" ")
 #define pe printf("\n")
-
+ 
 /* loops */
 #define rep(i,j,k) for(int i=j; i<=k; i++)
 #define repd(i,j,k) for(int i=j; i>=k; i--)
 #define iter(it, s) for(auto it=s.begin(); it!=s.end(); it++)
-
+ 
 /* constraints. */ 
 #define max_size 100005
 #define max_sieve_size 1000005
@@ -46,19 +55,44 @@
 #define GCD_EPS 0.0001
 #define PI 3.14159265358979323846
 #define mod(a) ((a)%MOD)
-
+ 
 #define bcnt __builtin_popcount 
-
+ 
 ll ciel(double a) { ll ret = a; if(a-ret>EPS) ret++; return ret; }
 ll gcd(ll a, ll b) { if(a<b)return gcd(b, a); if(a%b==0)return b; return gcd(b, a%b); }
 ll pow(ll n, ll p) {if(p==0)return 1; if(n<=1)return n;ll res = 1;while(p){if(p&1) res = mod(res*n);n = mod(n*n);p /= 2;} return res;}
-
+ 
 double fgcd(double a, double b) { if(fabs(a)<fabs(b)) return fgcd(b, a); if(fabs(b)<GCD_EPS) return a; return fgcd(b, fmod(a,b)); }
-
+ 
 bool db_db_cmp(double a, double b) { return (a+EPS>b && a-EPS<b); }
  
 using namespace std;
 
+set<int> s;
+ 
+/* This function calculates primes upto the given max_sieve_size. */
+int sieve[max_sieve_size];
+ 
+void calc_sieve()
+{
+    for(int i=0; i<max_sieve_size; i++)
+        sieve[i] = i;
+ 
+    sieve[0] = sieve[1] = 1;
+ 
+    for(int i=2; i<max_sieve_size; i++)
+    {
+        if(sieve[i]==i)
+        {
+            for(int j=i; j<max_sieve_size; j=j+i)
+            {
+            	if(sieve[j]==j)
+            		sieve[j] = i;
+            }
+        }
+    }
+}
+ 
 /*
  * This class implements the node of the segment tree.
  * @data val: the value to be stored in a node.
@@ -103,7 +137,7 @@ class SegmentTree {
 		 * This method takes the primary array as input and builds the segment tree.
 		 * @data a: the size of the primary array.
 		 */
-		void init(ll a) { n = a; rep(i,1,n) ar[i] = scan_ll(); build_segment_tree(1, 1, n); }
+		void init(ll a) { n = a; rep(i,1,n) sl(ar[i]); build_segment_tree(1, 1, n); }
 
 
 		/* 
@@ -111,7 +145,11 @@ class SegmentTree {
 		 * @data node: the index of the node in the segment tree.
 		 * @data index: the index in the primary array for which the node is responsible.
 		 */
-		inline void init_base_node(ll node, ll index) { seg_tree[node].val = ar[index]; }
+		inline void init_base_node(ll node, ll index) { 
+			seg_tree[node].val = sieve[ar[index]]; 
+			if(ar[index]>1)
+				s.insert(index);
+		}
 
 
 		/*
@@ -199,7 +237,53 @@ class SegmentTree {
 		/* This method prints the segment tree. */
 		void print_segment_tree() { print_segment_tree(1, 1, n); }
 }st;
-
-int main() {
-	return 0;
+ 
+ 
+void preprocess() {
+	calc_sieve();
 }
+ 
+void solve() {
+	int n, m;
+	sd(n); sd(m);
+ 
+ 	s.clear();
+	st.init(n);
+ 
+	while(m--) {
+		int a, l, r;
+		sd(a); sd(l); sd(r);
+		if(a==0) {
+			vector<int> v;
+			for(set<int>::iterator it = s.lower_bound(l); it!=s.end() && *it<=r; it++) {
+				st.ar[*it] /= sieve[st.ar[*it]];
+				st.update(*it, sieve[st.ar[*it]]);
+
+				if(st.ar[*it]==1) {
+					v.pb(*it);
+				}
+			}
+
+			rep(i,0,sz(v)) {
+				s.erase(v[i]);
+			}
+		}
+		else {
+			printf("%d ", st.query(l, r));
+		}
+	}
+	cout<<endl;
+}
+ 
+ 
+int main() {
+	preprocess();
+ 
+	int t;
+	sd(t);
+ 
+	while(t--) {
+		solve();
+	}
+	return 0;
+} 
