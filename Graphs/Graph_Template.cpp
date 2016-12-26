@@ -106,6 +106,8 @@ class Graph {
 
 		/* constructor. */
 		Graph() { rep(i,0,max_node_size-1) { nodes[i].index = i; visited[i] = 0; } is_undirected = true; }
+		Graph(int n) { node_size = n; is_undirected = true; }
+		Graph(int n, ll m) { node_size = n; edge_size = m; is_undirected = true; }
 
 
 		/* This method sets the graph as directed. */
@@ -142,7 +144,7 @@ class Graph {
 		}
 
 
-		/* This method performs dfs on the graph. */
+		/* This method performs recursive dfs on the graph. */
 		void dfs(int current) {
 			visited[current] = 1;
 
@@ -151,6 +153,34 @@ class Graph {
 				if(!visited[to]) {
 					nodes[to].parent = current;
 					dfs(to);
+				}
+			}
+		}
+
+
+		/*
+		 * This method performs the bfs.
+		 * @param start_node: node to start from.
+		 * @param end_node: node to end.
+		 * @return int: distance from start node to end node.
+		 */
+		int bfs(int start_node, int end_node) {
+			queue<pii > q;
+			q.push(mp(start_node, 0));
+			visited[start_node] = 1;
+
+			while(!q.empty()) {
+				pii cur = q.front();
+				q.pop();
+
+				if(cur.f == end_node) return cur.s;
+
+				rep(i,0,sz(nodes[cur.f].edges)) {
+					int to = nodes[cur.f].edges[i].f;
+					if(!visited[to]) {
+						q.push(mp(to, cur.s+1));
+						visited[to] = 1;
+					}
 				}
 			}
 		}
