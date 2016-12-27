@@ -148,7 +148,7 @@ class Graph {
 		void dfs(int current) {
 			visited[current] = 1;
 
-			rep(i,0,size(nodes[current].edges)) {
+			rep(i,0,sz(nodes[current].edges)) {
 				int to = nodes[current].edges[i].f;
 				if(!visited[to]) {
 					nodes[to].parent = current;
