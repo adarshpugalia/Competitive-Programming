@@ -103,6 +103,8 @@ class Graph {
 		bool is_undirected, visited[max_node_size];
 		Node nodes[max_node_size];
 
+		ll dij_cost[max_node_size];
+
 
 		/* constructor. */
 		Graph() { rep(i,0,max_node_size-1) { nodes[i].index = i; visited[i] = 0; } is_undirected = true; }
@@ -183,6 +185,47 @@ class Graph {
 					}
 				}
 			}
+		}
+
+		/*
+		 * This method implements the dijkstra algorithm.
+		 * @param start_node: start node for the path.
+		 * @param end_node: end node for the path.
+		 * @return ll: distance between the start and the end node.
+		 *
+		 * TODO: Add comparator for priority queue.
+		 */
+		ll dijkstra(int start_node, int end_node) {
+			/* updating the cost to be -ve for each node. */
+			rep(i,1,node_size) {
+				dij_cost[i] = -1;
+			}
+
+
+			pq<pair<ll, int > > p;
+			p.push(mp(0, start_node));
+
+			while(!p.empty()) {
+				pair<ll, int > cur = p.top();
+				p.pop();
+
+				/* Update only if the node has not been visited. */
+				if(dij_cost[cur.s] == -1) {
+					dij_cost[cur.s] = -cur.f;
+
+					rep(i,0,sz(nodes[cur.s].edges)) {
+						int to = nodes[cur.s].edges[i].f;
+						ll cost = nodes[cur.s].edges[i].s;
+
+						if(dij_cost[to] == -1) {
+							p.push(mp(cur.f - cost, to));	
+						}
+						
+					}
+				}
+			} 
+
+			return dij_cost[end_node];
 		}
 
 

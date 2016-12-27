@@ -1,3 +1,8 @@
+/*
+ * Problem Link: https://www.hackerrank.com/challenges/synchronous-shopping
+ * Tags: Dijkstra, Bit masking
+ */
+
 #include <bits/stdc++.h>
 
 /* Data types and structures. */
@@ -9,6 +14,7 @@
 #define pll pair<ll, ll>
 #define vpii vector <pii >
 #define vpll vector <pll >
+#define pq priority_queue
  
 /* Data structure helpers. */ 
 #define f first
@@ -36,7 +42,7 @@
 #define iter(it, s) for(auto it=s.begin(); it!=s.end(); it++)
 
 /* constraints. */ 
-#define max_size 100005
+#define max_size 1005
 #define max_matrix_size 100
 #define max_log 17
 #define INF 1000000000000000000
@@ -49,8 +55,18 @@
 
 using namespace std;
 
-#define max_node_size 100005
+#define max_node_size 1005
 #define Edge pair<int, ll>
+
+class Compare {
+	public:
+	    bool operator() (pair<ll, pii > i, pair<ll, pii > j) {
+	        return i.f < j.f;
+	    }
+};
+
+int k;
+int fish_mask[max_node_size];
 
 /*
  * This class implements a node in the graph.
@@ -84,6 +100,7 @@ class Node {
 		}
 };
 
+ll dij_cost[max_node_size][1500];
 
 /* 
  * This class implements the graph.
@@ -102,6 +119,8 @@ class Graph {
 		ll edge_size;
 		bool is_undirected, visited[max_node_size];
 		Node nodes[max_node_size];
+
+		/* This array is used to store the cost for dijkstra. */
 
 
 		/* constructor. */
@@ -186,6 +205,46 @@ class Graph {
 		}
 
 
+		ll dijkstra(int start_node, int end_node) {
+			/* updating the cost to be -ve for each node. */
+			rep(i,1,node_size) {
+				rep(j,0,1024) {
+					dij_cost[i][j] = -1;
+				}
+			}
+
+
+			pq<pair<ll, pair<int, int> > > p;
+			p.push(mp(0, mp(1, 0)));
+
+			while(!p.empty()) {
+				pair<ll, pair<int, int> > cur = p.top();
+				p.pop();
+
+				if(dij_cost[cur.s.f][cur.s.s] == -1) {
+					dij_cost[cur.s.f][cur.s.s] = -cur.f;
+
+					int new_mask = cur.s.s | fish_mask[cur.s.f];
+					if(dij_cost[cur.s.f][new_mask] == -1) {
+						p.push(mp(cur.f, mp(cur.s.f, new_mask)));
+					}
+
+					rep(i,0,sz(nodes[cur.s.f].edges)) {
+						int to = nodes[cur.s.f].edges[i].f;
+						ll cost = nodes[cur.s.f].edges[i].s;
+
+						if(dij_cost[to][cur.s.s] == -1) {
+							p.push(mp(cur.f - cost, mp(to, cur.s.s)));	
+						}
+						
+					}
+				}
+			} 
+
+			return dij_cost[node_size][(1<<k)-1];
+		}
+
+
 		/* This method converts the graph into its complement graph. */
 		void complement_graph() {
 			rep(i,1,node_size) {
@@ -206,3 +265,47 @@ class Graph {
 			return output; 
 		}
 } g;
+
+int main() {
+	int n, m;
+	cin>>n>>m>>k;
+
+	g = Graph(n, m);
+
+	rep(i, 1, n) {
+		int a;
+		cin>>a;
+
+		int mask = 0;
+
+		rep(j,1,a) {
+			int b;
+			cin>>b;
+
+			mask |= (1 << (b-1));
+		}
+
+		fish_mask[i] = mask;
+	}
+
+	rep(i,1,m) {
+		int a, b;
+		ll c;
+		cin>>a>>b>>c;
+
+		g.add_edge(a, b, c);
+	}
+
+	g.dijkstra(1, n);
+
+	ll ans = -1;
+	rep(i,0,1024) {
+		rep(j,0,1024) {
+			if(dij_cost[n][i] != -1 && dij_cost[n][j] != -1 && ((i|j) == ((1 <<  k) - 1) && (ans == -1 || ans > max(dij_cost[n][i],dij_cost[n][j])))) {
+				ans = max(dij_cost[n][i],dij_cost[n][j]);
+			}
+		}
+	}
+
+	cout<<ans<<endl;
+}  
