@@ -215,19 +215,20 @@ class Graph {
 		 * The logic for selecting the edge is implemented in the comparator for the
 		 * priority queue.
 		 *
+		 * @param start_node: start node to being building the spanning tree.
 		 * @return ll: total cost of building the spanning tree.
 		 */
-		ll build_minimum_spanning_tree() {
+		ll build_minimum_spanning_tree(int start_node) {
 			clear_visited();
 
 			 /* The node in the priority queue stores a pair<cost, pair<to, from> > */
 			pq<pair<ll, pii >, vector<pair<ll, pii > >, Comparator > p;
-			visited[1] = 1;
+			visited[start_node] = 1;
 			
 			/* pushing all the edges from node 1. */
-			rep(i,0,sz(nodes[1].edges)) {
-				Edge e = nodes[1].edges[i];
-				p.push(mp(e.s, mp(e.f, 1)));
+			rep(i,0,sz(nodes[start_node].edges)) {
+				Edge e = nodes[start].edges[i];
+				p.push(mp(e.s, mp(e.f, start_node)));
 			}
 
 			ll ret = 0;
@@ -283,5 +284,5 @@ int main() {
 		g.add_edge(a, b, c);
 	}
 
-	cout<<g.build_minimum_spanning_tree()<<endl;
+	cout<<g.build_minimum_spanning_tree(1)<<endl;
 }
