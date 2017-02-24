@@ -51,26 +51,33 @@
 
 using namespace std;
 
-
+/*
+ * This class implements the KMP algorithm.
+ */
 class KMP {
 	public:
 		string needle;
 		int failure[max_size];
 		
+
 		void init(string n) {
 			needle = n;
 			buildFailureFunction();
-			cout<<"Finished\n";
 		}
 
-		void buildFailureFunction() {
-			failure[0] = 0;
 
-			rep(i,1,needle.length()-1) {
-				cout<<i<<endl;
+		/*
+		 * This method builds the failure function.
+		 * failure[i] gives the length of strict suffix of the prefix of length i,
+		 * which is also a prefix of needle.
+		 */
+		void buildFailureFunction() {
+			failure[0] = failure[1] = 0;
+
+			rep(i,2,needle.length()) {
 				int currentPartialMatch = failure[i-1];
 				while(1) {
-					if(needle[currentPartialMatch] == needle[i]) {
+					if(needle[currentPartialMatch] == needle[i-1]) {
 						failure[i] = currentPartialMatch+1;
 						break;
 					}
@@ -82,39 +89,16 @@ class KMP {
 
 					currentPartialMatch = failure[currentPartialMatch];
 				}
-				cout<<"out: "<<i<<endl;
 			}
 		}
 
-		// vector<int> getMatchings(string hayStack) {
-		// 	vector<int> ret;
-		// 	int currentMatch = 0;
-		// 	int hayStackIndex = 0;
 
-		// 	while(hayStackIndex < hayStack.length()) {
-		// 		if(hayStack[hayStackIndex] == needle[currentMatch]) {
-		// 			currentMatch++;
-		// 			hayStackIndex++;
-
-		// 			if(currentMatch == needle.length()) {
-		// 				ret.pb(hayStackIndex - needle.length());
-		// 				currentMatch = failure[currentMatch-1];
-		// 			}
-
-		// 		} else {
-		// 			if(currentMatch == 0) {
-		// 				hayStackIndex++;
-		// 			} else {
-		// 				currentMatch = failure[currentMatch-1];
-		// 			}
-		// 		}
-		// 	}
-
-		// 	return ret;
-		// }
-
-		int getMatchings(string hayStack) {
-			int maxMatch = 0, shifts = 0;
+		/*
+		 * This method returns the indices in hayStack where it matches
+		 * the needle.ss
+		 */
+		vector<int> getMatchings(string hayStack) {
+			vector<int> ret;
 			int currentMatch = 0;
 			int hayStackIndex = 0;
 
@@ -123,37 +107,24 @@ class KMP {
 					currentMatch++;
 					hayStackIndex++;
 
-					if(currentMatch > maxMatch) {
-						maxMatch = currentMatch;
-						shifts = hayStackIndex - currentMatch;
-					}
-
 					if(currentMatch == needle.length()) {
-						//ret.pb(hayStackIndex - needle.length());
-						currentMatch = failure[currentMatch-1];
+						ret.pb(hayStackIndex - needle.length());
 					}
 
 				} else {
 					if(currentMatch == 0) {
 						hayStackIndex++;
 					} else {
-						currentMatch = failure[currentMatch-1];
+						currentMatch = failure[currentMatch];
 					}
 				}
 			}
 
-			return shifts;
+			return ret;
 		}
 }kmp;
 
 
 int main() {
-	int n;
-	cin>>n;
-
-	string a, b;
-	cin>>a>>b;
-	kmp.init(a);
-	cout<<kmp.getMatchings(b+b)<<endl;
 	return 0;
 }
